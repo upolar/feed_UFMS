@@ -1,43 +1,34 @@
+import re
 import requests
 import json
-import re
 
+from os import stat
 from time import sleep
 from bs4 import BeautifulSoup
-from os import stat
 
-BOT_TOKEN = "INSERT_BOT_TOKEN_HERE"
-CHAT_TARGET = "INSERT CHANNEL ID OR USERNAME"
+BOT_TOKEN = 'INSERT_BOT_TOKEN_HERE'
+CHANNEL_ID = 'INSERT CHANNEL ID OR USERNAME'
+API_URL = 'https://api.telegram.org/bot' + BOT_TOKEN + '/'
+NEWS_URL = 'https://www.ufms.br/category/noticias/page/'
 
-api_url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/'
-news_url = 'https://www.ufms.br/category/noticias/page/'
-
-new_data = {}
-new_data['News'] = []
-
+post_id_list = []
 pages = []
 
 
 # Get news pages
 for i in range(1,3):
-    tmp = news_url + str(i) + '/'
+    tmp = NEWS_URL + str(i) + '/'
     pages.append(tmp)
 
 def exist_article(data, value):
     if(data is None):
         return False
-    return any(new['ID']==value for new in data['News'])
+    return any(new==value for new in data)
 
-def create_article_list(ID, title, time, content, url):
-    return new_data['News'].append({
-                'ID': ID,
-                'title': title,
-                'content': content,
-                'timestamp': time,
-                'website': url
-                })
+def create_article_list(id_):
+    return new_data.append(id_)
 
-def post_article(ID, title, time, content, url, delay=10):
+def post_article(id_, title, time, content, url, delay=10):
     pattern = r'([\_|\*|\[|\]|\(|\)|\~|\`|\>|\#|\+|\-|\=|\||\{|\}|\.|\!])'
     title = re.sub(pattern, r'\\\1', title)
     content = re.sub(pattern, r'\\\1', content)
@@ -48,9 +39,9 @@ def post_article(ID, title, time, content, url, delay=10):
         datetime = time, 
         content = content, 
         url = url, 
-        ID= ID
+        ID= id_
     )
-    r = requests.get(api_url + 'sendMessage', data={"chat_id":CHAT_TARGET,"text":message, "parse_mode":"MarkdownV2"})
+    r = requests.get(API_URL + 'sendMessage', data={"chat_id":CHAT_TARGET,"text":message, "parse_mode":"MarkdownV2"})
     response = r.json()
 
     if(response['ok'] is True):
@@ -70,23 +61,23 @@ for item in reversed(pages):
     
     # Append article from the oldest to newest
     for article in reversed(articles_list):
-        ID = int(re.sub(r'post\-', r' ', article.get('id')))
+        post_id = int(re.sub(r'post\-', r' ', article.get('id')))
         title = article.find('h2').getText()
         datetime = article.find('time').get('datetime')
         content_preview = article.find('p').getText()
         link = article.find('a').get('href')
      
-        with open("news.json") as f:
+        with open("last_posts_id.json") as f:
             data = json.load(f)
             
-            create_article_list(ID, title, datetime, content_preview, link)
-            
-            # Post article / send message only if NOT exist
-            if not exist_article(data, ID):
+            post_id_list.append(post_id)
+
+            # Post article / send message only if NOT exis
+            if not exist_article(data, post_id):
                 exist_new_article = True
-                post_article(ID, title, datetime, content_preview, link)
+                #post_article(post_id, title, datetime, content_preview, link)
 
 
-if(exist_new_article):
-    with open('news.json', 'w') as outfile:
-        json.dump(new_data, outfile)
+if exist_new_article:
+    with open('last_posts_id.json', 'w') as outfile:
+        json.dump(post_id_list, outfile)
