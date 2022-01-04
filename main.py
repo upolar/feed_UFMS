@@ -43,7 +43,7 @@ for item in reversed(pages):
             # Post article / send message only if NOT exis
             if not artic.exist_article(data, post_id):
                 exist_new_article = True
-                #artic.post_article(post_id, title, datetime, content_preview, link)
+                artic.post_article(post_id, title, datetime, content_preview, link)
 
 
 if exist_new_article:
