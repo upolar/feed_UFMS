@@ -19,7 +19,8 @@ def post_article(id_, title, time, content, url, delay=10):
 
     message = f"*{title}*\n\n{time}\n\n_{content}_\n\n[LEIA MAIS]({url})\n\n\#post\_{id_}"
 
-    r = requests.get(API_URL + 'sendMessage', data={"chat_id":CHAT_TARGET,"text":message, "parse_mode":"MarkdownV2"})
+    s = requests.Session()
+    r = s.get(API_URL + 'sendMessage', data={"chat_id":CHAT_TARGET,"text":message, "parse_mode":"MarkdownV2"})
     response = r.json()
 
     if(response['ok'] is True):

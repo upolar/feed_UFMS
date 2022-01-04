@@ -7,7 +7,7 @@ A initial project to practice webscraping with python on the college website. Th
 
 ### First steps
 
-To the bot be able to realize a post you should edit two variables `BOT_TOKEN` and `CHANNEL_ID` that are in `artic.py` file. Even without these credentials the script will be able to get the news from the website.
+To the bot be able to realize a post you should edit two variables `BOT_TOKEN` and `CHANNEL_ID` that are in `credentials.py` file. Even without these credentials the script will be able to get the news from the website.
 
 | variable | Description |
 | ---  | --- |
