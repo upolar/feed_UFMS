@@ -7,9 +7,11 @@ A initial project to practice webscraping with python on the college website. Th
 
 ### First steps
 
-To the bot be able to realize a post you should edit two variables `BOT_TOKEN` and `CHANNEL_ID` that are in `credentials.py` file. Even without these credentials the script will be able to get the news from the website.
+To the bot be able to realize a post you should edit two variables `BOT_TOKEN` and `CHAT_TARGET` that are in `credentials.py` file. Even without these credentials the script will be able to get the news from the website.
 
 | variable | Description |
 | ---  | --- |
 | `BOT_TOKEN` | To get a bot token, create a bot in [@botfather](https://t.me/botfather)|
-| `CHANNEL_ID` | The channel identifier ("@username" or ID) where the bot will post the news if it has enough permissions |
+| `CHAT_TARGET` | The chat identifier ("@username" or ID) where the bot will post the news if it has enough permissions |
+
+

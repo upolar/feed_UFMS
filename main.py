@@ -2,7 +2,6 @@ import re
 import requests
 import json
 
-from os import stat
 from time import sleep
 from bs4 import BeautifulSoup
 
