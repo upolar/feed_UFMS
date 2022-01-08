@@ -1,9 +1,10 @@
 import re
-import requests
 from time import sleep
 from app.credentials import BOT_TOKEN, CHAT_TARGET
 
-API_URL = 'https://api.telegram.org/bot' + BOT_TOKEN + '/'
+from bot import Bot
+
+bot = Bot(BOT_TOKEN)
 
 def exist_article(data, value):
     return any(new==value for new in data)
@@ -19,9 +20,7 @@ def post_article(id_, title, time, content, url, delay=10):
 
     message = f"*{title}*\n\n{time}\n\n_{content}_\n\n[LEIA MAIS]({url})\n\n\#post\_{id_}"
 
-    s = requests.Session()
-    r = s.get(API_URL + 'sendMessage', data={"chat_id":CHAT_TARGET,"text":message, "parse_mode":"MarkdownV2"})
-    response = r.json()
+    bot.send_message(CHAT_TARGET, message)
 
     sleep(delay)
 
