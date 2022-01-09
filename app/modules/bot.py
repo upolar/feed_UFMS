@@ -1,4 +1,5 @@
 import requests
+import logging
 
 class Bot():
     bot = requests.Session()
@@ -24,5 +25,21 @@ class Bot():
                      "protect_content": protect_content,
                      "parse_mode": parse_mode}
                ).json()
+        
+        if not r['ok']:
+            logger = logging.getLogger(__name__)
 
+            syslog = logging.StreamHandler()
+            filelog = logging.FileHandler('app.log', 'a')
+            
+            formatter = logging.Formatter('%(asctime)s - [%(levelname)s] : %(message)s')
+            #syslog.setFormatter(formatter)
+            
+            filelog.setFormatter(formatter)
+            logger.addHandler(filelog)
+
+            error_message = f"{r['error_code']} - {r['description']}"
+            
+            logger.error(error_message)
+            
         return r['ok']
